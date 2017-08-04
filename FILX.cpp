@@ -14,24 +14,35 @@
 
 FILX::FILX(){
 	processAvailable = true;
+	firstTime = true;
+	lastCompute = 0;
+	timeCompute = 80;
+	valueFinal = 0;
+	valueAd = 0;
 }
 
-double FILX::Process(double value, int sizeArray){
-	if(processAvailable){
-		processAvailable = false;
-		int i;
-		double tempArray[sizeArray];
-		double arrayAll;
+double FILX::Process(double value, int sizeArray){		
+	if(lastCompute <= millis()){
+		lastCompute += timeCompute;
 		
-		for(i = 0; i < sizeArray; i++){
+		if(firstTime){
+			for(int i = 0; i < sizeArray; i++){
+				tempArray[i] = 0.0;
+			}
+			firstTime = false;
+		}
+		
+		for(int i = 0; i < sizeArray; i++){
 			tempArray[i] = tempArray[i+1];
 		}
 		tempArray[sizeArray-1] = value;
+		arrayAll = 0.0;
 		
-		for(i = 0; i < sizeArray; i++){
-			arrayAll += tempArray[i];
+		for(int i = 0; i < sizeArray; i++){
+			arrayAll = arrayAll + tempArray[i];
 		}
-		processAvailable = true;
+		
+		valueFinal = arrayAll/sizeArray;
 	}
-	return arrayAll/sizeArray;
+	return valueFinal;
 }
