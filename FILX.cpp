@@ -12,37 +12,34 @@
 
 #include <FILX.h>
 
-FILX::FILX(){
+FILX::FILX(int sizeArray){
 	processAvailable = true;
 	firstTime = true;
 	lastCompute = 0;
 	timeCompute = 80;
-	valueFinal = 0;
+	//valueFinal = 0;
 	valueAd = 0;
+	tempSize = sizeArray;
+	tempArray = (double *) calloc(sizeArray, sizeof(double));
 }
 
-double FILX::Process(double value, int sizeArray){		
-	if(lastCompute <= millis()){
+double FILX::Process(int value){	
+	double valueFinal;	
+	if(lastCompute <= millis() && processAvailable){
+		processAvailable = false;
 		lastCompute += timeCompute;
 		
-		if(firstTime){
-			for(int i = 0; i < sizeArray; i++){
-				tempArray[i] = 0.0;
-			}
-			firstTime = false;
+		for(int i = tempSize - 1; i > 0; i--){
+			tempArray[i] = tempArray[i-1];
 		}
+		tempArray[0] = value;
+		long arrayAll = 0;
 		
-		for(int i = 0; i < sizeArray; i++){
-			tempArray[i] = tempArray[i+1];
-		}
-		tempArray[sizeArray-1] = value;
-		arrayAll = 0.0;
-		
-		for(int i = 0; i < sizeArray; i++){
+		for(int i = 0; i < tempSize; i++){
 			arrayAll = arrayAll + tempArray[i];
 		}
-		
-		valueFinal = arrayAll/sizeArray;
+		processAvailable = true;
+		double valueFinal = arrayAll/tempSize;
 	}
 	return valueFinal;
 }

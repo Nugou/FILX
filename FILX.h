@@ -9,8 +9,7 @@ class FILX {
 		unsigned long timeCompute;
 		unsigned long lastCompute;
 		
-		double arrayAll;
-		double tempArray[];
+		double *tempArray;
 		double valueAd;
 		double valueFinal;
 		double tempValue;
@@ -19,9 +18,10 @@ class FILX {
 		int tempSizeArray;
 	
 	public:
-		FILX();
-		double Process(double, int);
+		FILX(int);
+		double Process(int);
 		
 };
 #endif
+
 
